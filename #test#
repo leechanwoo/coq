@@ -1,0 +1,13 @@
+Definition pred (n : nat) :=
+match n with 
+| O => 0
+| S n' => n'
+end.
+
+Definition minusTwo (n : nat) :=
+match n with
+| O => O
+| S O => O
+| S (S n') => n'
+end.
+

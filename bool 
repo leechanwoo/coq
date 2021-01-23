@@ -1,0 +1,5 @@
+From Coq Require Export String.
+
+Inductive bool : Type := 
+  | true
+  | false.
