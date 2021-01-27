@@ -192,11 +192,6 @@ Proof.
   reflexivity.
 Qed.
 
-Lemma mult_helper : forall k n : nat,
-    n + n * k = n * (1 + k).
-Proof.
-Admitted.
-
 
 Theorem mult_comm : forall m n : nat,
     m * n = n * m.
@@ -204,7 +199,7 @@ Proof.
 Admitted.
 
 
-  
+
 
 (* End *)
 
