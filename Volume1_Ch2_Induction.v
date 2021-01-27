@@ -160,8 +160,51 @@ Proof.
   reflexivity.
 Qed.
 
+(* Formal vs. Informal Proof *)
+
+Theorem plus_assoc' : forall n m p : nat,
+    n + (m + p) = (n + m) + p.
+Proof. intros. induction n as [| n' IHn']. reflexivity.
+       simpl. rewrite -> IHn'. reflexivity. Qed.
+
+
+Theorem plus_assoc'' : forall n m p : nat,
+    n + (m + p) = (n + m) + p.
+Proof.
+  intros.
+  induction n as [| n' IHn'].
+  - reflexivity.
+  - simpl.
+    rewrite -> IHn'.
+    reflexivity.
+Qed.
+
+Theorem plus_swap : forall n m p : nat,
+    n + (m + p) = m + (n + p).
+Proof.
+  intros.
+  rewrite plus_assoc.
+  assert (H: m + n = n + m).
+  { rewrite plus_comm.
+    reflexivity. }
+  rewrite <- H.
+  rewrite plus_assoc.   
+  reflexivity.
+Qed.
+
+Lemma mult_helper : forall k n : nat,
+    n + n * k = n * (1 + k).
+Proof.
+Admitted.
+
+
+Theorem mult_comm : forall m n : nat,
+    m * n = n * m.
+Proof.
+Admitted.
+
+
   
-    
 
 (* End *)
 
