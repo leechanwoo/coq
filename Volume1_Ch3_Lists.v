@@ -228,8 +228,16 @@ Example test_countoddmembers3:
 Proof. reflexivity. Qed.
 
 
-Fixpoint alternate (l1 l2 : natlist) : natlist.
-Admitted.
+Fixpoint alternate (l1 l2 : natlist) : natlist := 
+  match l1 with
+    | nil => l2
+    | h1 :: t1 =>
+      match l2 with
+      | nil => l1
+      | h2 :: t2 => h1 :: h2 :: alternate t1 t2
+      end
+  end.
+
 
 Example test_alternate1:
   alternate [1;2;3] [4;5;6] = [1;4;2;5;3;6].
@@ -248,3 +256,204 @@ Example test_alternate4:
 Proof. reflexivity. Qed.
 
 
+Definition bag := natlist.
+
+
+Fixpoint eqb (n m: nat) : bool := 
+match n with 
+| O => match m with 
+  | O => true
+  | S m' => false 
+  end
+| S n' => match m with
+  | O => false
+  | S m' => eqb n' m'
+  end
+end.
+
+Fixpoint count (v : nat) (s : bag) : nat :=
+  match s with
+    | nil => 0
+    | h :: t =>
+      match eqb v h with
+        | true => (1 + (count v t))
+        | false => count v t
+      end
+  end.
+
+  
+
+Example test_count1: count 1 [1;2;3;1;4;1] = 3.
+Proof. reflexivity. Qed.
+
+Example test_count2: count 6 [1;2;3;1;4;1] = 0.
+Proof. reflexivity. Qed.
+
+Definition sum : bag -> bag -> bag :=
+  alternate.
+
+
+Example test_sum1: count 1 (sum [1;2;3] [1;4;1]) = 3.
+Proof. reflexivity. Qed.
+
+Definition add (v : nat) (s : bag) : bag :=
+  cons v s.
+  
+Example test_add1: count 1 (add 1 [1;4;1]) = 3.
+Proof. reflexivity. Qed.
+
+Example test_add2: count 5 (add 1 [1;4;1]) = 0.
+Proof. reflexivity. Qed.
+
+
+Definition member (v : nat) (s : bag) : bool :=
+  match count v s with
+  | O => false
+  | S n => true
+  end.
+
+
+Example test_member1: member 1 [1;4;1] = true.
+Proof. reflexivity. Qed.
+
+Example test_member2: member 2 [1;4;1] = false.
+Proof. reflexivity. Qed.
+
+
+Fixpoint remove_one (v : nat) (s : bag) : bag := 
+  match s with
+  | nil => nil
+  | h :: t =>
+    match eqb h v with
+    | true => t
+    | false => h :: remove_one v t
+    end
+  end.
+  
+
+Example test_remove_one1:
+  count 5 (remove_one 5 [2;1;5;4;1]) = 0.
+Proof. reflexivity. Qed.
+
+Example test_remove_one2:
+  count 5 (remove_one 5 [2;1;4;1]) = 0.
+Proof. reflexivity. Qed.
+
+Example test_remove_one3:
+  count 4 (remove_one 5 [2;1;4;5;1;4]) = 2.
+Proof. reflexivity. Qed.
+
+Example test_remove_one4:
+  count 5 (remove_one 5 [2;1;5;4;5;1;4]) = 1.
+Proof. reflexivity. Qed.
+
+
+Fixpoint remove_all (v : nat) (s : bag) : bag := 
+  match s with
+  | nil => nil
+  | h :: t =>
+    match eqb h v with
+    | true => remove_all v t
+    | false => h :: remove_all v t
+    end
+  end.
+
+Example test_remove_all1: count 5 (remove_all 5 [2;1;5;4;1]) = 0.
+Proof. reflexivity. Qed.
+
+Example test_remove_all2: count 5 (remove_all 5 [2;1;4;1]) = 0.
+Proof. reflexivity. Qed.
+
+Example test_remove_all3: count 4 (remove_all 5 [2;1;4;5;1;4]) = 2.
+Proof. reflexivity. Qed.
+
+Example test_remove_all4: count 5 (remove_all 5 [2;1;5;4;5;1;4;5;1;4]) = 0.
+Proof. reflexivity. Qed.
+
+
+Fixpoint subset (s1 : bag) (s2 : bag) : bool :=
+  match s2 with
+  | nil => false 
+  | h2 :: t2 =>
+    match s1 with
+    | nil => true
+    | s1' => subset (remove_one h2 s1) t2
+    end
+  end.
+
+
+Example test_subset1: subset [1;2] [2;1;4;1] = true.
+Proof. reflexivity. Qed.
+
+Example test_subset2: subset [1;2;2] [2;1;4;1] = false.
+Proof. reflexivity. Qed.
+
+(* Adding a value to a bag should increase the value's count by one.
+State that as a theorem and prove it.
+
+Theorem bag_theorem : ...
+Proof.
+..
+Qed.
+ *)
+
+
+(* Reasoning About Lists *)
+
+Theorem nil_app : forall l : natlist,
+    [] ++  l = l.
+Proof.
+  reflexivity. Qed.
+
+
+Theorem tl_length_pred : forall l:natlist,
+    pred (length l) = length (tl l).
+Proof.
+  intros l. destruct l as [| n l'].
+  - reflexivity.
+  - reflexivity. Qed.
+
+
+(* Induction on Lists *)
+
+Theorem app_assoc : forall l1 l2 l3 : natlist,
+    (l1 ++ l2) ++ l3 = l1 ++ (l2 ++ l3).
+Proof.
+  intros l1 l2 l3. induction l1 as [| n l1' IHl1'].
+  - reflexivity.
+  - simpl. rewrite -> IHl1'. reflexivity. Qed.
+
+
+(* Reversing a List *)
+
+Fixpoint rev (l:natlist) : natlist :=
+  match l with
+  | nil => nil
+  | h :: t => rev t ++ [h]
+  end.
+
+
+Example test_rev1: rev [1;2;3] = [3;2;1].
+Proof. reflexivity. Qed.
+
+Example test_rev2: rev nil = nil.
+Proof. reflexivity. Qed.
+
+
+(* Search *)
+
+Search rev.
+
+Search (_ + _ = _ + _).
+
+Search (?x + ?y = ?y + ?x).
+
+
+(* List Exercises *)
+
+
+       
+
+
+
+                         
