@@ -31,7 +31,7 @@ Compute (next_weekday (next_weekday saturday)).
 Example test_next_weekday:
   (next_weekday (next_weekday saturday)) = tuesday.
 Proof. simpl. reflexivity. Qed.
- 
+
 (* Booleans *)
 Inductive bool : Type :=
 | true
@@ -79,10 +79,10 @@ Proof. simpl. reflexivity. Qed.
 
 (* Exercise *)
 Definition nandb (b1:bool) (b2:bool) : bool :=
-match b1 with
-| true => negb b2
-| false => true
-end.
+  match b1 with
+  | true => negb b2
+  | false => true
+  end.
 
 Example test_nandb1: (nandb true false) = true.
 Proof. simpl. reflexivity. Qed.
@@ -97,10 +97,10 @@ Example test_nandb4: (nandb true true) = false.
 Proof. simpl. reflexivity. Qed.
 
 Definition andb3 (b1:bool) (b2:bool) (b3:bool) : bool :=
-match b1 with 
-| true => andb b2 b3 
-| false => false
-end.
+  match b1 with 
+  | true => andb b2 b3 
+  | false => false
+  end.
 
 Example test_andb31: (andb3 true true true) = true.
 Proof. simpl. reflexivity. Qed.
@@ -137,24 +137,24 @@ Inductive color: Type :=
 | primary (p : rgb).
 
 Definition monochrome (c : color) : bool :=
-match c with
-| black => true 
-| white => true
-| primary p => false 
-end.
+  match c with
+  | black => true 
+  | white => true
+  | primary p => false 
+  end.
 
 Definition isred (c : color) : bool :=
-match c with
-| black => false
-| white => false 
-| primary red => true
-| primary _ => false 
-end.
+  match c with
+  | black => false
+  | white => false 
+  | primary red => true
+  | primary _ => false 
+  end.
 
 (* Modules *)
 
 Module Playground.
-Definition b: rgb := blue.
+  Definition b: rgb := blue.
 End Playground.
 
 Definition b : bool := true.
@@ -166,24 +166,24 @@ Check b : bool.
 
 
 Module TuplePlayground.
-Inductive bit : Type :=
-| B0
-| B1.
+  Inductive bit : Type :=
+  | B0
+  | B1.
 
-Inductive nybble : Type :=
-| bits (b0 b1 b2 b3 : bit).
+  Inductive nybble : Type :=
+  | bits (b0 b1 b2 b3 : bit).
 
-Check (bits B1 B0 B1 B0) : nybble.
+  Check (bits B1 B0 B1 B0) : nybble.
 
-Definition all_zero(nb: nybble) : bool :=
-match nb with 
-| (bits B0 B0 B0 B0) => true
-| (bits _ _ _ _) => false
-end.
+  Definition all_zero(nb: nybble) : bool :=
+    match nb with 
+    | (bits B0 B0 B0 B0) => true
+    | (bits _ _ _ _) => false
+    end.
 
-Compute (all_zero (bits B1 B0 B1 B0)).
+  Compute (all_zero (bits B1 B0 B1 B0)).
 
-Compute (all_zero (bits B0 B0 B0 B0)).
+  Compute (all_zero (bits B0 B0 B0 B0)).
 
 End TuplePlayground.
 
@@ -192,34 +192,34 @@ End TuplePlayground.
 
 Module NatPlayground.
 
-Inductive nat : Type :=
-| O
-| S (n : nat).
+  Inductive nat : Type :=
+  | O
+  | S (n : nat).
 
-Inductive nat' : Type :=
-| stop
-| tick (foo : nat').
+  Inductive nat' : Type :=
+  | stop
+  | tick (foo : nat').
 
-Definition pred (n:nat) : nat :=
-match n with
-| O => O
-| S n' => n'
-end.
+  Definition pred (n:nat) : nat :=
+    match n with
+    | O => O
+    | S n' => n'
+    end.
 
 
-Example ex1: pred(O) = O.
-Proof. simpl. reflexivity. Qed.
+  Example ex1: pred(O) = O.
+  Proof. simpl. reflexivity. Qed.
 
-Example ex2: pred(S (O)) = O.
-Proof. simpl. reflexivity. Qed.
+  Example ex2: pred(S (O)) = O.
+  Proof. simpl. reflexivity. Qed.
 
-Example ex3: pred(S(S(O))) = S(O).
-Proof. simpl. reflexivity. Qed.
+  Example ex3: pred(S(S(O))) = S(O).
+  Proof. simpl. reflexivity. Qed.
 
-Example ex4: pred(S(S(S(O)))) = S(S(O)).
-Proof. simpl. reflexivity. Qed.
+  Example ex4: pred(S(S(S(O)))) = S(S(O)).
+  Proof. simpl. reflexivity. Qed.
 
-Check (S (S (S (S O)))).
+  Check (S (S (S (S O)))).
 
 
 
@@ -227,11 +227,11 @@ End NatPlayground.
 
 
 Definition minustwo (n: nat) : nat :=
-match n with 
-| O => O
-| S O => O
-| S ( S n') => n'
-end.
+  match n with 
+  | O => O
+  | S O => O
+  | S ( S n') => n'
+  end.
 
 Compute (minustwo 4).
 
@@ -242,14 +242,14 @@ Check pred : nat -> nat.
 Check minustwo : nat -> nat.
 
 Fixpoint evenb (n:nat) : bool := 
-match n with
-| O => true
-| S O => false
-| S (S n') => evenb n'
-end.
+  match n with
+  | O => true
+  | S O => false
+  | S (S n') => evenb n'
+  end.
 
 Definition oddb (n:nat) : bool := 
-negb (evenb n).
+  negb (evenb n).
 
 Example test_oddb1: oddb 1 = true.
 Proof. simpl. reflexivity. Qed.
@@ -259,47 +259,47 @@ Proof. simpl. reflexivity. Qed.
 
 Module NatPlayground2.
 
-Fixpoint plus (n:nat) (m:nat) : nat := 
-match n with
-| O => m
-| S n' => S (plus n' m)
-end.
+  Fixpoint plus (n:nat) (m:nat) : nat := 
+    match n with
+    | O => m
+    | S n' => S (plus n' m)
+    end.
 
-Compute (plus 3 2).
+  Compute (plus 3 2).
 
-Fixpoint mult (n m : nat) : nat :=
-match n with
-| O => O
-| S n'  => plus m (mult n' m)
-end.
+  Fixpoint mult (n m : nat) : nat :=
+    match n with
+    | O => O
+    | S n'  => plus m (mult n' m)
+    end.
 
-Example test_mult1: (mult 3 3) = 9.
-Proof. simpl. reflexivity. Qed.
+  Example test_mult1: (mult 3 3) = 9.
+  Proof. simpl. reflexivity. Qed.
 
-Fixpoint minus (n m:nat) : nat :=
-match n, m with 
-| O , _ => O
-| S _ , O => n
-| S n', S m' => minus n' m'
-end.
+  Fixpoint minus (n m:nat) : nat :=
+    match n, m with 
+    | O , _ => O
+    | S _ , O => n
+    | S n', S m' => minus n' m'
+    end.
 
 End NatPlayground2.
 
 Fixpoint exp (base power: nat) : nat :=
-match power with 
-| O => S O
-| S p => mult base (exp base p)
-end.
+  match power with 
+  | O => S O
+  | S p => mult base (exp base p)
+  end.
 
 
 (* Exercise *)
 
 
 Fixpoint factorial (n:nat) : nat :=
-match n with 
-| O => S O
-| S n' => mult n (factorial n')
-end.
+  match n with 
+  | O => S O
+  | S n' => mult n (factorial n')
+  end.
 
 Example test_factorial1: (factorial 3) = 6.
 Proof. simpl. reflexivity. Qed.
@@ -308,39 +308,39 @@ Example test_factorial2: (factorial 5) = (mult 10 12).
 Proof. simpl. reflexivity. Qed.
 
 Notation "x + y" := (plus x y)
-(at level 50, left associativity) : nat_scope.
+                      (at level 50, left associativity) : nat_scope.
 
 Notation "x - y" := (minus x y)
-(at level 50, left associativity) : nat_scope.
+                      (at level 50, left associativity) : nat_scope.
 
 Notation "x * y" := (mult x y) 
-(at level 40, left associativity) : nat_scope.
+                      (at level 40, left associativity) : nat_scope.
 
 Check ((0 + 1) + 1) : nat.
 
 
 
 Fixpoint eqb (n m: nat) : bool := 
-match n with 
-| O => match m with 
-  | O => true
-  | S m' => false 
-  end
-| S n' => match m with
-  | O => false
-  | S m' => eqb n' m'
-  end
-end.
+  match n with 
+  | O => match m with 
+         | O => true
+         | S m' => false 
+         end
+  | S n' => match m with
+            | O => false
+            | S m' => eqb n' m'
+            end
+  end.
 
 Fixpoint leb (n m: nat) : bool := 
   match n with
-    | O => true
-    | S n' => 
-          match m with
-            | O => false
-            | S m'  => leb n' m'
-            end
-end.
+  | O => true
+  | S n' => 
+    match m with
+    | O => false
+    | S m'  => leb n' m'
+    end
+  end.
 
 Example test_leb1: leb 2 2 = true.
 Proof. simpl. reflexivity. Qed.
@@ -359,13 +359,13 @@ Proof. simpl. reflexivity. Qed.
 
 Definition ltb (n m: nat) : bool :=
   match n, m with 
-    | O, O => false
-    | O, S m' => true
-    | S n', O => false
-    | S n', S m' => match eqb n' m' with
-      | false => leb n' m'
-      | true => false
-      end
+  | O, O => false
+  | O, S m' => true
+  | S n', O => false
+  | S n', S m' => match eqb n' m' with
+                  | false => leb n' m'
+                  | true => false
+                  end
   end.
 
 
@@ -408,26 +408,26 @@ Proof.
 (* Proof by Rewriting *)
 
 Theorem plus_id_example: forall n m: nat,
-  n = m ->
-  n + n = m + m.
+    n = m ->
+    n + n = m + m.
 
 Proof.
   intros n m.
   intros H.
   rewrite -> H.
   reflexivity. Qed.
-  
+
 
 Theorem plus_id_exercise : forall n m o : nat,
     n = m -> m = o -> n + m = m + o.
-  
+
 Proof.
   intros n m o.
   intros H G.
   rewrite -> H.
   rewrite -> G.
   reflexivity. Qed.
-  
+
 
 Check mult_n_O.
 Check mult_n_Sm.
@@ -459,11 +459,11 @@ Proof.
 
 Theorem plus_1_neq_0_firsttry : forall n : nat,
     (n+1) =? 0 = false.
-  
+
 Proof.
   intros n.
   simpl.
- Abort.
+Abort.
 
 Theorem plus_1_neq_0 : forall n : nat,
     (n + 1) =? 0 = false.
@@ -471,7 +471,7 @@ Proof.
   intros n. destruct n as [| n'] eqn:E.
   - reflexivity.
   - reflexivity. Qed.
-    
+
 Theorem negb_involutive : forall b : bool,
     negb (negb b) = b.
 
@@ -559,12 +559,12 @@ Qed.
 
 Notation "x + y" := (plus x y)
                       (at level 50, left associativity)
-                      : nat_scope.
+                    : nat_scope.
 
 Notation "x * y" := (mult x y)
                       (at level 40, left associativity)
-                      : nat_scope.
- 
+                    : nat_scope.
+
 
 (* Fixpoints and Structural Recursion *)
 
@@ -640,8 +640,8 @@ Fixpoint incr (m:bin) : bin :=
   | B0 m' => B1 m'
   | B1 m' => B0 (incr m')
   end.
-  
-                  
+
+
 
 Fixpoint bin_to_nat (m:bin) : nat :=
   match m with
@@ -656,7 +656,7 @@ Proof. simpl. reflexivity. Qed.
 
 Example bin_to_nat2 : bin_to_nat(B1 (B1 (B1 Z))) = 7.
 Proof. simpl. reflexivity. Qed.
-                       
+
 Example bin_to_nat3 : bin_to_nat(B0 (B0 (B0 (B1 Z)))) = 8.
 Proof. simpl. reflexivity. Qed.
 

@@ -1,4 +1,6 @@
 
+From LF Require Export Volume1_Ch3_Lists.
+
 (* Polymorphism *)
 
 Inductive boollist : Type :=
@@ -11,7 +13,6 @@ Inductive list (X:Type) : Type :=
 
 
 Check list : Type -> Type.
-
 
 Check (nil nat) : list nat.
 
@@ -76,7 +77,7 @@ Arguments repeat {X} x count.
 
 
 
-  
+ 
 
 
 

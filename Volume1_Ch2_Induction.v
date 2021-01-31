@@ -1,6 +1,8 @@
 
 (* Proof by Induction *)
 
+From LF Require Export Volume1_Ch1_Basics.
+
 Theorem plus_n_O_firsttry : forall n:nat,
     n = n + 0.
 Proof.
@@ -138,6 +140,7 @@ Proof.
   reflexivity.
 Qed.
 
+(* Proofs Within Proofs *)
 
 Theorem mult_0_plus' : forall n m : nat,
     (0 + n) * m = n * m.
@@ -160,6 +163,7 @@ Proof.
   reflexivity.
 Qed.
 
+
 (* Formal vs. Informal Proof *)
 
 Theorem plus_assoc' : forall n m p : nat,
@@ -178,6 +182,10 @@ Proof.
     rewrite -> IHn'.
     reflexivity.
 Qed.
+
+
+(* More Exercises *)
+
 
 Theorem plus_swap : forall n m p : nat,
     n + (m + p) = m + (n + p).
@@ -199,10 +207,65 @@ Proof.
 Admitted.
 
 
+Check leb.
+
+Theorem leb_refl : forall n:nat,
+    true = (n <=? n).
+Proof.
+Admitted.
+
+Theorem zero_nbeq_S : forall n:nat,
+    0 =? (S n) = false.
+Proof.
+Admitted.
 
 
-(* End *)
+Theorem andb_false_r : forall b:bool,
+    andb b false = false.
+Proof.
+Admitted.
+
+Theorem plus_ble_compat_l : forall n m p : nat,
+    n <=? m = true -> (p + n) <=? (p + m) = true.
+Proof.
+Admitted.
+
+Theorem S_nbeq_o : forall n:nat,
+    (S n) =? 0 = false.
+Proof.
+Admitted.
+
+Theorem mult_1_l : forall n:nat, 1 * n = n.
+Proof.
+Admitted.
+
+Theorem mult_plus_distr_r : forall n m p : nat,
+    (n + m) * p = (n * p) + (m * p).
+Proof.
+Admitted.
+
+Theorem mult_assoc : forall n m p : nat,
+    n * (m * p) = (n * m ) * p.
+Proof.
+Admitted.
 
 
+Theorem eqb_refl : forall n:nat,
+    true = (n =? n).
+Proof.
+Admitted.
 
+Theorem plus_swap' : forall n m p : nat,
+    n + (m + p) = m + (n + p).
+Proof.
+Admitted.
+
+
+Fixpoint nat_to_bin (n:nat) : bin
+. Admitted.
+
+
+Theorem nat_bin_nat : forall n, bin_to_nat (nat_to_bin n) = n.
+Proof.
+Admitted.
 
