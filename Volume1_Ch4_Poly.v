@@ -617,6 +617,8 @@ Module Exercises.
     reflexivity.
   Qed.
    
+
+  (* REVIEW *)
   Theorem curry_uncurry : forall (X Y Z : Type)
                                  (f : (X * Y) -> Z) (p : X * Y),
       prod_uncurry (prod_curry f) p = f p.
@@ -634,6 +636,7 @@ Module Exercises.
        | a :: l' => if n =? O then Some a else nth_error l' (pred n)
        end.
 
+  (* REVIEW *)
   Module Church.
     Definition cnat := forall (X : Type), (X -> X) -> X -> X.
 
@@ -676,6 +679,7 @@ Module Exercises.
       plus (plus two two) three = plus one (plus three three).
     Proof. reflexivity. Qed.
 
+    (* REVIEW *)
     Definition mult (n m : cnat) : cnat :=
       fun (X: Type) (f : X -> X) (x : X) => n X (m X f) x.
 
@@ -689,6 +693,7 @@ Module Exercises.
     Proof. reflexivity. Qed.
    
 
+    (* REVIEW *)
     Definition exp (n m : cnat) : cnat :=
       fun (X : Type) (f : X -> X) (x : X) => m (X -> X) (n X) f x.
 
