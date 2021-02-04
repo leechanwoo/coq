@@ -692,6 +692,8 @@ Module Exercises.
     Example mult_3 : mult two three = plus three three.
     Proof. reflexivity. Qed.
    
+    Example mult_4 : mult (plus three three) zero = zero.
+    Proof. reflexivity. Qed.
 
     (* REVIEW *)
     Definition exp (n m : cnat) : cnat :=
