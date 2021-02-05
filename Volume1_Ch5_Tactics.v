@@ -302,15 +302,47 @@ Proof.
 Theorem eqb_true : forall n m,
     n =? m = true -> n = m.
 Proof.
-Admitted.
-
+  intros n. induction n as [| n' IHn'].
+  - (* n = O *) intros m eq. destruct m as [| m'] eqn:E.
+    + (* m = O *) reflexivity.
+    + discriminate eq. 
+  - (* n = S n' *) intros m eq.
+    destruct m as [| m'] eqn:E.
+    + (* m = O *) discriminate eq.
+    + (* m = S m' *)
+      apply f_equal.
+      apply IHn'.
+      simpl in eq.
+      apply eq.
+Qed.
+  
 
 Theorem plus_n_n_injective : forall n m,
     n + n = m + m ->
     n = m.
 Proof.
-Admitted.
-
+  intros n. induction n as [|n' IHn'].
+  - (* n = O *)
+    intros m H.
+    destruct m as [| m'].
+    + (* m = O *)
+      reflexivity.
+    + (* m = S m' *)
+      discriminate H.
+  - (* n = S n' *)
+    intros m H.
+    destruct m as [| m'].
+    + (* m = O *)
+      discriminate H.
+    + (* m = S m' *)
+      rewrite <- plus_n_Sm in H.
+      rewrite <- plus_n_Sm in H.
+      simpl in H.
+      apply f_equal.
+      apply IHn'.
+      injection H as H'.
+      apply H'.
+Qed.
 
 Theorem double_injective_take2_FAILED : forall n m,
     double n = double m ->
@@ -348,13 +380,26 @@ Theorem nth_error_after_last : forall (n : nat) (X : Type) (l : list X),
     length l = n ->
     nth_error l n = None.
 Proof.
-Admitted.
+  intros n X l.
+  generalize dependent n.
+  induction l as [|e l' IHl'].
+  - (* l = nil *) reflexivity.
+  - (* l = e::l' *) intros n eq.
+    destruct n as [|n IHn'].
+    + (* n = O *) discriminate eq.
+    + (* n = S n' *) simpl.
+      apply IHl'.
+      injection eq as goal.
+      apply goal.
+Qed.
+
 
 (* Unfolding Definitions *)
 
 Definition square n := n * n.
 
-Lemma square_mult : forall n m, square (n * m) = square n * square m.
+Lemma square_mult : forall n m,
+    square (n * m) = square n * square m.
 Proof.
   intros n m.
   simpl.
@@ -437,11 +482,26 @@ Fixpoint split {X Y : Type} (l : list (X*Y))
     end
   end.
 
+
+(* Review *)
+
 Theorem combine_split : forall X Y (l : list (X * Y)) l1 l2,
     split l = (l1, l2) ->
     combine l1 l2 = l.
 Proof.
-Admitted.
+  intros X Y l.
+  induction l as [| h t].
+  - (* l = [] *) intros l1 l2 H. inversion H. reflexivity.
+  - (* l = h::t *) destruct h as [x y]. intros l1 l2 H. inversion H.
+    destruct (split t). 
+    inversion H1. 
+    simpl.
+    rewrite IHt.
+    reflexivity.
+    reflexivity.
+Qed.
+
+    
 
 Definition sillyfun1 (n : nat) : bool :=
   if n =? 3 then true
@@ -478,12 +538,47 @@ Proof.
       rewrite -> Heqe5. reflexivity.
     + (* e5 = false *) discriminate eq. Qed.
 
+
+(* Review *)
 Theorem bool_fn_applied_thrice :
   forall (f : bool -> bool) (b : bool),
     f (f (f b)) = f b.
 Proof.
-Admitted.
+  intros f b.
+  destruct (f true) eqn:Hftrue.
+  destruct (f false) eqn:Hffalse.
+  destruct b.
+  rewrite Hftrue.
+  rewrite Hftrue.
+  apply Hftrue.
+  rewrite Hffalse.
+  rewrite Hftrue.
+  apply Hftrue.
+  destruct b.
+  rewrite Hftrue.
+  rewrite Hftrue.
+  apply Hftrue.
+  rewrite Hffalse.
+  rewrite Hffalse.
+  apply Hffalse.
+  destruct (f false) eqn:Hffalse.
+  destruct b.
+  rewrite Hftrue.
+  rewrite Hffalse.
+  apply Hftrue.
+  rewrite Hffalse.
+  rewrite Hftrue.
+  apply Hffalse.
+  destruct b.
+  rewrite Hftrue.
+  rewrite Hffalse.
+  apply Hffalse.
+  rewrite Hffalse.
+  rewrite Hffalse.
+  apply Hffalse.
+Qed.
 
+  
 (* Review *)
 
 (* intros: move hypotheses/variables from goal to context 
