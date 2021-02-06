@@ -613,21 +613,57 @@ Qed.
 Theorem eqb_sym : forall (n m : nat),
     (n =? m) = (m =? n).
 Proof.
-Admitted.
+  intros n.
+  induction n as [|n' IHn'].
+  - (* n = O *) induction m as [|m' IHm'].
+    + (* m = O *) reflexivity.
+    + (* m = S m' *) simpl. reflexivity.
+  - (* n = O *) intros m. induction m as [|m' IHm'].
+    + (* m = O *) simpl. reflexivity.
+    + (* m = S m' *) simpl.
+      apply IHn'.
+Qed.
+
 
 Theorem eqb_trans : forall n m p,
     n =? m = true ->
     m =? p = true ->
     n =? p = true.
 Proof.
-Admitted.
+  intros n.
+  induction n as [|n' IHn'].
+  - (* n = O *) induction m as [|m' IHm'].
+    + (* m = O *) simpl. intros p Hp Hp'. apply Hp'.
+    + (* m = S m' *) intros p Hp Hp'. discriminate Hp.
+  - (* n = S n' *) induction m as [|m' IHm'].
+    + (* m = O *) intros p Hp Hp'. discriminate Hp.
+    + (* m = S m' *) intros p H1 H2.
+      induction p as [|p' IHp].
+      { (* p = O *) discriminate H2. }
+      { (* p = S p' *)
+        simpl.
+        simpl in H1.
+        simpl in H2.
+        simpl in IHn'.
+        apply IHn' in H2.
+        apply H2.
+        apply H1.
+      }
+Qed.
+    
 
-Definition split_combine_statement : Prop
-. Admitted.
+
+(* Review *)
+Definition split_combine_statement : Prop := forall {X Y: Type}
+           (l1: list X) (l2: list Y),
+
+  length l1 = length l2 -> split (combine l1 l2) = (l1, l2).
+
 
 Theorem split_combine : split_combine_statement.
 Proof.
 Admitted.
+    
 
 Theorem filter_exercise : forall (X : Type) (test : X -> bool)
                                  (x : X) (l lf : list X),
